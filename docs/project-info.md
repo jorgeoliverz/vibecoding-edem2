@@ -1,50 +1,44 @@
 # Información del proyecto
 
 ## Qué es
-*Una o dos frases que expliquen la app.*
+Una aplicación web de recomendación instantánea de películas con un único botón central. Al pulsarlo, muestra al azar una sola película (póster, título y sinopsis) para evitar la fatiga de decisión; si no te convence, vuelves a pulsar para ver otra diferente.
 
 ## Para quién
-*Quién la va a usar y qué necesita resolver.*
+Personas que quieren ver algo en la tele pero tienen pereza o indecisión para buscar en catálogos extensos y quieren una recomendación directa en un solo clic.
 
 ## Funciones
-*Lista corta de lo que debe hacer.*
-
--
+- Mostrar una pantalla inicial limpia con un único botón principal destacado.
+- Al pulsar el botón, solicitar al backend una película al azar.
+- Presentar claramente la foto (póster), el título y la sinopsis/descripción de la película recomendada.
+- Permitir pulsar de nuevo el botón para recibir otra opción aleatoria distinta de la actual.
 
 ## Fuera de alcance
-*Lo que esta app no hará, para que el agente no lo añada.*
-
--
+- Cuentas de usuario, autenticación o perfiles.
+- Búsqueda manual, filtros por género/año o listas de favoritos.
+- Enlaces de reproducción directa, streaming integrado o valoración de usuarios.
 
 ## Tecnología
-*Qué se usa y dónde se ejecuta.*
+- **Frontend:** React (con Vite).
+- **Backend:** FastAPI (Python).
+- **Base de datos:** PostgreSQL.
+- **Contenedores y orquestación:** Docker y Docker Compose (servicios: `db`, `backend`, `frontend`).
+- **Pruebas:**
+  - Backend: `pytest` / `httpx` (para endpoints y lógica de selección aleatoria).
+  - Frontend: Vitest / React Testing Library.
+  - Extremo a extremo: Playwright en `e2e/`.
 
 ## Datos y claves
-*Qué datos usa y qué claves necesita. Solo los nombres: los valores van en `.env`.*
+- Tabla `movies`: id, title, synopsis, poster_url.
+- Claves y variables de entorno en `.env` (con plantilla en `.env.example`):
+  - `POSTGRES_USER`
+  - `POSTGRES_PASSWORD`
+  - `POSTGRES_DB`
+  - `POSTGRES_HOST`
+  - `POSTGRES_PORT`
+  - `DATABASE_URL`
+  - `VITE_API_URL`
 
 ## Cómo se prueba
-*Un caso concreto con su resultado esperado, del tipo "200.000 € al 3 % a 30 años = 843 €/mes".*
-
----
-
-<details>
-<summary>Ejemplo de referencia: calculadora de hipoteca (no es tu proyecto)</summary>
-
-**Qué es:** una página que calcula la cuota mensual de una hipoteca.
-
-**Para quién:** personas que están comparando hipotecas antes de ir al banco.
-
-**Funciones:**
-- Pedir importe, interés anual y años.
-- Mostrar la cuota mensual.
-- Avisar si falta un dato o no es válido.
-
-**Fuera de alcance:** cuentas de usuario, guardar simulaciones y ofertas de bancos reales.
-
-**Tecnología:** una página HTML con JavaScript que se abre en el navegador.
-
-**Datos y claves:** solo los datos que escribe el usuario, que no se guardan. No necesita claves.
-
-**Cómo se prueba:** 200.000 € al 3 % a 30 años = 843 €/mes.
-
-</details>
+- **Carga inicial:** La página abre y muestra el botón principal sin ninguna película seleccionada.
+- **Acción:** Al pulsar el botón, se llama al endpoint `GET /api/movies/random` y se renderiza la película (título visible, sinopsis y póster).
+- **Aleatoriedad/Cambio:** Al volver a pulsar el botón (`GET /api/movies/random?exclude_id=X`), se devuelve y muestra otra película diferente a la actual.
